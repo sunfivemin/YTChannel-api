@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📺 ytchannel-api
 
 유저(회원) 관리 기능(가입, 조회, 수정, 삭제)을 제공하는 간단한 RESTful API 실습 프로젝트입니다.
@@ -18,3 +19,6 @@ cd backend
 npm install
 node index.js
 ```
+=======
+# YTChannel
+>>>>>>> e50e9be98058a3f2c8cab08bc4d8034fe38b8fed
