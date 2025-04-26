@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const userRouter = require("./routes/user");
-const channelRouter = require("./routes/channel"); // ← 새로 추가!
+const channelRouter = require("./routes/channel");
 
 app.use(express.json());
 app.use(userRouter);
