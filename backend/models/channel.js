@@ -4,49 +4,49 @@
 	•	비즈니스 로직(로우 데이터)은 여기에서만 함.
  */
 // models/channel.js
-const db = new Map();
-let channelId = 1;
+// const db = new Map();
+// let channelId = 1;
 
-function createChannel({ userId, channelTitle }) {
-  db.set(channelId, { id: channelId, userId, channelTitle });
-  return channelId++;
-}
+// function createChannel({ userId, channelTitle }) {
+//   db.set(channelId, { id: channelId, userId, channelTitle });
+//   return channelId++;
+// }
 
-function getChannel(id) {
-  return db.get(Number(id));
-}
+// function getChannel(id) {
+//   return db.get(Number(id));
+// }
 
-function updateChannel(id, data) {
-  db.set(Number(id), data);
-}
+// function updateChannel(id, data) {
+//   db.set(Number(id), data);
+// }
 
-function deleteChannel(id) {
-  return db.delete(Number(id));
-}
+// function deleteChannel(id) {
+//   return db.delete(Number(id));
+// }
 
-// userId로 채널 전체 조회
-function getChannelsByUser(userId) {
-  const result = [];
-  db.forEach((value, key) => {
-    if (value.userId === userId) {
-      result.push({ id: key, ...value });
-    }
-  });
-  return result;
-}
+// // userId로 채널 전체 조회
+// function getChannelsByUser(userId) {
+//   const result = [];
+//   db.forEach((value, key) => {
+//     if (value.userId === userId) {
+//       result.push({ id: key, ...value });
+//     }
+//   });
+//   return result;
+// }
 
-// 전체 채널 조회 (관리자용)
-function getAllChannels() {
-  const result = [];
-  db.forEach((value) => result.push(value));
-  return result;
-}
+// // 전체 채널 조회 (관리자용)
+// function getAllChannels() {
+//   const result = [];
+//   db.forEach((value) => result.push(value));
+//   return result;
+// }
 
-module.exports = {
-  createChannel,
-  getChannel,
-  updateChannel,
-  deleteChannel,
-  getChannelsByUser,
-  getAllChannels,
-};
+// module.exports = {
+//   createChannel,
+//   getChannel,
+//   updateChannel,
+//   deleteChannel,
+//   getChannelsByUser,
+//   getAllChannels,
+// };

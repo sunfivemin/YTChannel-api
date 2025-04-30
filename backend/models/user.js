@@ -7,36 +7,36 @@
 	•	createUser() : 회원 Map에 데이터 저장
 	•	getUser() : 특정 id로 회원정보 반환
  */
-const db = new Map(); // 임시 DB
-let id = 1;
+// const db = new Map(); // 임시 DB
+// let id = 1;
 
-function createUser({ userId, password, name }) {
-  db.set(id, { userId, password, name });
-  return id++;
-}
+// function createUser({ userId, password, name }) {
+//   db.set(id, { userId, password, name });
+//   return id++;
+// }
 
-function getUser(id) {
-  return db.get(Number(id));
-}
+// function getUser(id) {
+//   return db.get(Number(id));
+// }
 
-function deleteUser(id) {
-  return db.delete(Number(id));
-}
+// function deleteUser(id) {
+//   return db.delete(Number(id));
+// }
 
-function updateUser(id, data) {
-  db.set(Number(id), data);
-}
+// function updateUser(id, data) {
+//   db.set(Number(id), data);
+// }
 
-function getAllUsers() {
-  const users = [];
-  db.forEach((value, key) => users.push({ id: key, ...value }));
-  return users;
-}
+// function getAllUsers() {
+//   const users = [];
+//   db.forEach((value, key) => users.push({ id: key, ...value }));
+//   return users;
+// }
 
-module.exports = {
-  createUser,
-  getUser,
-  deleteUser,
-  updateUser,
-  getAllUsers,
-};
+// module.exports = {
+//   createUser,
+//   getUser,
+//   deleteUser,
+//   updateUser,
+//   getAllUsers,
+// };
