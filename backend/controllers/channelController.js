@@ -7,19 +7,26 @@ function notFoundChannel(res) {
 
 // 1. 채널 생성 (POST /channels)
 exports.create = (req, res) => {
-  const { userId, channelTitle } = req.body;
-  if (!userId || !channelTitle) {
+  const { name, userId } = req.body;
+
+  // 유효성 검사: 빈 값 또는 숫자가 아닌 userId 거르기
+  if (!name || !userId || isNaN(Number(userId))) {
     return res
       .status(400)
-      .json({ message: "userId와 channelTitle이 필요합니다." });
+      .json({ message: "name과 숫자 userId가 필요합니다." });
   }
 
-  const sql = "INSERT INTO channels (user_id, channel_title) VALUES (?, ?)";
-  conn.query(sql, [userId, channelTitle], (err, result) => {
-    if (err) return res.status(500).json({ message: "채널 생성 실패" });
+  const sql = `INSERT INTO channels (name, user_id) VALUES (?, ?)`;
+  const values = [name, userId];
+
+  conn.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("채널 생성 실패:", err);
+      return res.status(500).json({ message: "채널 생성 실패" });
+    }
 
     res.status(201).json({
-      message: `${channelTitle} 채널이 생성되었습니다.`,
+      message: `${name} 님 채널 개설을 축하합니다!`,
       id: result.insertId,
     });
   });
@@ -29,6 +36,7 @@ exports.create = (req, res) => {
 exports.get = (req, res) => {
   const id = req.params.id;
   const sql = "SELECT * FROM channels WHERE id = ?";
+
   conn.query(sql, [id], (err, results) => {
     if (err) return res.status(500).json({ message: "조회 실패" });
     if (results.length === 0) return notFoundChannel(res);
@@ -40,22 +48,26 @@ exports.get = (req, res) => {
 // 3. 채널 수정 (PUT /channels/:id)
 exports.update = (req, res) => {
   const id = req.params.id;
-  const { channelTitle } = req.body;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: "수정할 name을 입력해주세요." });
+  }
 
   // 먼저 기존 채널 존재 확인
   conn.query("SELECT * FROM channels WHERE id = ?", [id], (err, results) => {
     if (err) return res.status(500).json({ message: "조회 실패" });
     if (results.length === 0) return notFoundChannel(res);
 
-    const oldTitle = results[0].channel_title;
+    const oldName = results[0].name;
 
     // 실제 수정
-    const updateSql = "UPDATE channels SET channel_title = ? WHERE id = ?";
-    conn.query(updateSql, [channelTitle, id], (err) => {
+    const updateSql = "UPDATE channels SET name = ? WHERE id = ?";
+    conn.query(updateSql, [name, id], (err) => {
       if (err) return res.status(500).json({ message: "수정 실패" });
 
       res.json({
-        message: `채널명이 수정되었습니다. 기존: "${oldTitle}" → 변경: "${channelTitle}"`,
+        message: `채널명이 수정되었습니다. 기존: "${oldName}" → 변경: "${name}"`,
       });
     });
   });
@@ -98,7 +110,7 @@ exports.getAllByUser = (req, res) => {
   });
 };
 
-// 6. 전체 채널 모두 조회 (GET /channels/all)
+// 6. 전체 채널 모두 조회 (GET /channels)
 exports.getAll = (req, res) => {
   conn.query("SELECT * FROM channels", (err, results) => {
     if (err) return res.status(500).json({ message: "전체 조회 실패" });
