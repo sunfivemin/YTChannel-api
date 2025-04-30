@@ -15,23 +15,21 @@ function createUser({ userId, password, name }) {
   return id++;
 }
 
-function getUser(userId) {
-  return db.get(Number(userId));
+function getUser(id) {
+  return db.get(Number(id));
 }
 
-function deleteUser(userId) {
-  return db.delete(Number(userId));
+function deleteUser(id) {
+  return db.delete(Number(id));
 }
 
-function updateUser(userId, data) {
-  db.set(Number(userId), data);
+function updateUser(id, data) {
+  db.set(Number(id), data);
 }
 
 function getAllUsers() {
   const users = [];
-  for (let [key, value] of db.entries()) {
-    users.push({ id: key, ...value });
-  }
+  db.forEach((value, key) => users.push({ id: key, ...value }));
   return users;
 }
 
