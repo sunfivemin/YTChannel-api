@@ -1,6 +1,6 @@
 /**
  * • 컨트롤러: 요청 처리 핸들러
- * • 비즈니스 로직 실행 (검증, DB 조회/삽입, 응답 구성)
+ * • 비즈니스 로직 실행 (검정, DB 조회/삽입, 응답 구성)
  */
 const conn = require("../db");
 
@@ -13,14 +13,10 @@ function notFoundUser(res) {
 exports.join = (req, res) => {
   const { email, name, password, contact } = req.body;
 
-  if (!email || !name || !password || !contact) {
-    return res.status(400).json({ message: "모든 필드를 입력해주세요." });
-  }
-
   const sql = `SELECT * FROM users WHERE email = ?`;
   conn.query(sql, [email], (err, results) => {
     if (err) {
-      console.error("쿼리 오류:", err);
+      console.error("구도 오류:", err);
       return res.status(500).json({ message: "DB 조회 실패" });
     }
 
@@ -50,7 +46,7 @@ exports.login = (req, res) => {
   const sql = `SELECT * FROM users WHERE email = ?`;
   conn.query(sql, [email], (err, results) => {
     if (err) {
-      console.error("로그인 쿼리 오류:", err);
+      console.error("로그인 구도 오류:", err);
       return res.status(500).json({ message: "DB 오류" });
     }
 
@@ -89,6 +85,23 @@ exports.get = (req, res) => {
     if (results.length === 0) return notFoundUser(res);
 
     res.json(results[0]);
+  });
+};
+
+// 이메일로 개별 회원 조회 (추가)
+exports.getByEmail = (req, res) => {
+  const email = req.query.email;
+  if (!email) return res.status(400).json({ message: "email가 필수합니다." });
+
+  const sql = `SELECT * FROM users WHERE email = ?`;
+  conn.query(sql, [email], (err, results) => {
+    if (err) return res.status(500).json({ message: "DB 오류" });
+    if (results.length === 0)
+      return res
+        .status(404)
+        .json({ message: "해당 사용자를 찾을 수 없습니다." });
+
+    res.status(200).json(results[0]);
   });
 };
 
