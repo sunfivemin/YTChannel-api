@@ -1,4 +1,5 @@
 const conn = require('../db');
+const jwt = require('jsonwebtoken'); // jwt 모듈
 
 // 공통 404 응답
 function notFoundUser(res) {
@@ -39,13 +40,31 @@ exports.login = (req, res) => {
 
     const user = results[0];
     if (user.password === password) {
-      return res.status(200).json({
-        message: `${user.name}님 로그인 되었습니다.`,
-        user,
-      });
+      try {
+        const token = jwt.sign(
+          {
+            email: user.email,
+            name: user.name,
+          },
+          process.env.PRIVATE_KEY,
+          { expiresIn: '1h', issuer: 'sunfive' }
+        );
+
+        res.cookie('token', token, {
+          httpOnly: true,
+        });
+
+        return res.status(200).json({
+          message: `${user.name}님 로그인 되었습니다.`,
+          user,
+        });
+      } catch (err) {
+        console.error('JWT 발급 실패:', err);
+        return res.status(500).json({ message: '토큰 발급 오류' });
+      }
     } else {
       return res
-        .status(400)
+        .status(403)
         .json({ message: '이메일 또는 비밀번호가 틀렸습니다.' });
     }
   });
